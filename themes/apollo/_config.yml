@@ -1,0 +1,22 @@
+menu:
+    Blog: /
+    Archive: /archives/
+    About: /about/
+    Twitter: http://twitter.com/icyfish_
+    # Rss: /atom.xml
+
+favicon: /favicon.png
+logo: /favicon.png
+
+# Comment
+# e.g disqus: seansun
+# disqus: icyfish
+duoshuo: 
+cloudTie: b6f771421eda4520be37cced4baa94d1
+
+# Analytics
+# google-analytics:
+ga: UA-65933410-1
+
+# Copyright Infomation
+startyear: 2017
