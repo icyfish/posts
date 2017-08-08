@@ -12,11 +12,10 @@ logo: /favicon.png
 # e.g disqus: seansun
 # disqus: icyfish
 duoshuo: 
-cloudTie: b6f771421eda4520be37cced4baa94d1
 
 # Analytics
 # google-analytics:
-ga: UA-65933410-1
+# ga: UA-65933410-1
 
 # Copyright Infomation
 startyear: 2017
