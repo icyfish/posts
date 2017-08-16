@@ -4,4 +4,4 @@ title: About
 comments: true
 ---
 
-## 记录
+## 随手记录
