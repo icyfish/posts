@@ -12,8 +12,8 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://icyfish.github.io/sp
-root: /sp/
+url: https://icyfish.github.io/posts
+root: /posts/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -83,6 +83,6 @@ archive_generator:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:icyfish/sp.git
+  repo: git@github.com:icyfish/posts.git
   branch: master
 
