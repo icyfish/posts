@@ -4,4 +4,4 @@ title: About
 comments: true
 ---
 
-## 随手记录
+## 未经审视的人生不值得一过
