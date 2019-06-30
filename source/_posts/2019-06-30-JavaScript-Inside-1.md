@@ -6,6 +6,7 @@ permalink: JavaScript-Inside-1
 
 [How JavaScript works: an overview of the engine, the runtime, and the call stack](https://blog.sessionstack.com/how-does-javascript-actually-work-part-1-b0bacc073cf)
 
+<!-- more -->
 
 ### JS引擎
 JavaScript 引擎: 最出名的是 V8 引擎, Chrome 和 Node.js 内部使用的就是 V8 引擎. V8 引擎大概长这样:
