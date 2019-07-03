@@ -29,6 +29,8 @@ HTML 解析文档时, 遇到如下标签会先执行解析操作, 完成之后�
 
 ## 优化JS的加载
 
+[Prefetching, preloading, prebrowsing](https://css-tricks.com/prefetching-preloading-prebrowsing/)
+
 
 ### DNS prefetching
 
@@ -38,7 +40,7 @@ HTML 解析文档时, 遇到如下标签会先执行解析操作, 完成之后�
 
 在head中插入以上代码之后, 浏览器会预先执行网站 example.com 的 DNS 查询, 后续引用的资源如果是从 `example.com` 获取时, 就不需要再在 DNS 查询这一步上耗费多余的时间. 
 
-[Front-end performance for web designers and front-end developers](https://csswizardry.com/2013/01/front-end-performance-for-web-designers-and-front-end-developers/#section:dns-prefetching)
+**More About Prefetch:** [Front-end performance for web designers and front-end developers](https://csswizardry.com/2013/01/front-end-performance-for-web-designers-and-front-end-developers/#section:dns-prefetching)
 
 ### Preconnect
 
@@ -46,12 +48,16 @@ HTML 解析文档时, 遇到如下标签会先执行解析操作, 完成之后�
 <link rel="preconnect" href="https://css-tricks.com">
 ```
 
-执行了 DNS 预先查询之后, 还会建立 TCP 握手连接, TLS 协商. 
+Preconnect: 执行对某个域名的 DNS 预先查询之后, 建立 TCP 握手连接, TLS 协商. 
 
-[Eliminating Roundtrips with Preconnect](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/)
+**More About Preconnect:** [Eliminating Roundtrips with Preconnect](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/)
 
-```js
+### Prefetching
 
-
+```html
+<link rel="prefetch" href="xxx.com/image.png">
 ```
 
+以上标签会预先加载`xxx.com/image.png`的资源并且存在缓存中以便后续使用.
+
+和 DNS 预先查询不同的是, 这种方式实际上已经执行了对资源的请求和加载. 但某些预先加载的行为会被浏览器忽略. 比如说, 弱网情况下浏览器不会去预先加载size比较大的字体文件. 
