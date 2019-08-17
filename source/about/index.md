@@ -4,4 +4,4 @@ title: About
 comments: true
 ---
 
-## 未经审视的人生不值得一过
+## 用十倍苦心做突出一个
