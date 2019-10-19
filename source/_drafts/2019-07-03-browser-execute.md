@@ -5,6 +5,9 @@ tags:
   - Browser
 ---
 
+[How Browser Works](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/)
+
+
 浏览器执行解析的过程
 
 <!-- more -->
