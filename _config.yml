@@ -64,7 +64,8 @@ pagination_dir: page
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
 
-theme: icarus
+# theme: icarus
+theme: apollo
 
 feed:
   type: atom
