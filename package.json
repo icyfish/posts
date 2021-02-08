@@ -5,6 +5,11 @@
   "hexo": {
     "version": "3.9.0"
   },
+  "scripts": {
+    "start": "hexo server",
+    "prepublish": "hexo generate",
+    "publish": "hexo deploy"
+  },
   "dependencies": {
     "hexo": "^3.9.0",
     "hexo-deployer-git": "^1.0.0",
