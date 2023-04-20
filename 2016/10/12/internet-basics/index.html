@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> Internet基础 · Fish</title><meta name="description" content="Internet基础 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Internet基础</h1><div class="post-info">Oct 12, 2016</div><div class="post-content"><p>介绍一些网络相关的基础概念, 对经典问题「在浏览器中输入网址敲下回车之后发生了什么」的解答.</p>
+<a id="more"></a>
+<p><strong>一些术语的解释</strong></p>
+<ol>
+<li>服务器(server):<br> a. 是具有IP地址的计算机<br> b. 内部运行着服务器软件<br> c. 配置有各种数据文件或应用程序等</li>
+<li>IP地址:<br> a. 计算机只要连接上Internet,就会获得一个IP地址<br> b. 是唯一的,计算机的IP地址就像人的身份证号码</li>
+<li>DNS(域名系统):<br> a. 将域名和IP地址对应起来<br> (zh.wikipedia.org作为一个域名与IP地址208.80.154.225相对应)</li>
+</ol>
+<p><strong>在浏览器中输入网址敲下回车之后发生了什么？</strong>   </p>
+<p><img src="/posts/images/internet_wrap.jpg" alt="wrap"></p>
+<p>以google为例,我们在浏览器中输入<a href="http://www.google.com之后,向服务器发送请求访问google的主页页面,但是我们输入的是域名,可是服务器具有的是IP地址,因此需要浏览器和服务器之间的网络服务供应商(ISP)的帮助来执行DNS查询服务,将我们所输入的域名转化为便于机器识别的IP地址,这样就会连接到具有特定IP地址的服务器" target="_blank" rel="noopener">www.google.com之后,向服务器发送请求访问google的主页页面,但是我们输入的是域名,可是服务器具有的是IP地址,因此需要浏览器和服务器之间的网络服务供应商(ISP)的帮助来执行DNS查询服务,将我们所输入的域名转化为便于机器识别的IP地址,这样就会连接到具有特定IP地址的服务器</a>.</p>
+<p>浏览器向服务器发送请求(request)之后,服务器会根据相关的request做出响应(response),根据浏览器的请求发送给浏览器其所需的文件.</p>
+<p><img src="/posts/images/internet_request.jpg" alt="request"></p>
+<p>上图包括了请求报文的主要部分,请求头和请求体,请求体也可省略.服务器根据请求头中的信息判断需要给浏览器发送哪个文件.上图中服务器会根据Path(/posts/images/logo.jpg)这个信息给浏览器发送在images文件夹中的logo.jpg文件.图中其他部分的含义:</p>
+<ol>
+<li>Host(<a href="http://www.google.com)" target="_blank" rel="noopener">www.google.com)</a>: 域名为<a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a></li>
+<li>Method:请求方法(括号中为几个常用方法)<br> a. GET:请求服务器发送某个资源给浏览器.<br> b. POST: 向服务器输入数据,如登录操作输入用户名及密码,发一条新微博等.<br> c. PUT:对服务器中已经存储的内容进行修改,如修改密码.<br> d. DELETE: 删除服务器中的内容.</li>
+<li>Cookies:网站为了辨别用户身份在用户的计算机中所存储的数据.</li>
+<li>user-agent: 用户的浏览器信息.</li>
+<li>Content Type:请求体的数据格式.</li>
+</ol>
+<p>服务器的响应报文主要内容见下图.</p>
+<p><img src="/posts/images/internet_response.jpg" alt="response"></p>
+<p>响应报文中最重要的内容是Content-Type,因为浏览器只能根据Content-Type知道服务器发送来的文件是何种类型.<br>Status/Code表示服务器HTTP的响应状态:</p>
+<p>a. 1XX 信息性状态码<br>b. 2XX 成功状态码<br>c. 3XX 重定向状态码<br>d. 4XX 客户端错误状态码<br>e. 5XX 服务器错误状态码</p>
+<p>如果浏览器接收到的是HTML文件,就会对其进行解析,一旦碰到需要assets(css,js或者img等格式的文件)的标签之后,就会暂停解析重新向服务器发出另一个请求,如下图,浏览器会根据link标签中的内容向服务器请求main.css文件,获取所需文件后继续解析后面的HTML,此时的解析与之前不同的是:会根据main.css中的样式对下面的HTML添加样式,为用户呈现添加了样式之后的网页.因此,最好将请求css的link标签放在HTML的head标签内.</p>
+<p><img src="/posts/images/internet_html.jpg" alt="html"></p>
+<p>但对于JavaScript文件,如果在文档的head标签中包含所有JavaScript文件,意味着必须等到全部JavaScript代码都被下载、解析和执行完成以后,才能开始呈现页面的内容,对于需要很多JavaScript代码的页面来说,这会导致浏览器在呈现页面时出现明显的延迟,而延迟期间的浏览器窗口中将是一片空白.所以,最好把全部JavaScript引用放在body标签中页面内容的后面这样,在解析包含的JavaScript代码之前,页面的内容将完全呈现在浏览器中.而用户也会因为浏览器窗口显示空白页面的时间缩短而感到打开页面的速度加快.</p>
+<p>如第一张大图所示,能请求assets文件的除了HTML还有JavaScript,但JavaScript不直接发送HTTP请求的,而是通过XMLHttpRequest接口来发送请求,AJAX编程一般都是利用这个接口来实现.</p>
+<p>服务器响应并将所需的文件发送给用户之后,页面就在浏览器中呈现了.</p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=e4S8zfLdLgQ&amp;index=20&amp;list=PLoYCgNOIyGAB_8_iq1cL8MVeun7cB6eNc" target="_blank" rel="noopener">How the Internet Works for Developers</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2016/10/15/execution-context/" class="prev">PREV</a><a href="/posts/2016/09/11/programming-languages/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

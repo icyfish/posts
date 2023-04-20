@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> 三种基础排序算法 · Fish</title><meta name="description" content="三种基础排序算法 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">三种基础排序算法</h1><div class="post-info">Mar 5, 2017</div><div class="post-content"><p>冒泡排序, 插入排序, 选择排序的介绍以及它们的JavaScript代码实现. </p>
+<a id="more"></a>
+<p>在计算机科学所使用的排序算法通常被分类为：</p>
+<ul>
+<li>计算的 <strong>时间复杂度</strong>（最差、平均、和最好性能），依据列表（list）的大小(n)。一般而言，好的性能是O(n log n)，且坏的性能是O(n^2)。对于一个排序理想的性能是O(n)。仅使用一个抽象关键比较运算的排序算法总平均上总是至少需要O(n log n)。</li>
+<li><strong>存储器使用量</strong>（以及其他电脑资源的使用）</li>
+<li><strong>稳定性</strong>：稳定排序算法会让原本有相等键值的纪录维持相对次序。也就是如果一个排序算法是稳定的，当有两个相等键值的纪录R和S，且在原本的列表中R出现在S之前，在排序过的列表中R也将会是在S之前。</li>
+<li><strong>依据排序的方法</strong>：插入、交换、选择、合并等等。</li>
+</ul>
+<p>依据排序的方法分类的三种排序算法:</p>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>冒泡排序对一个需要进行排序的数组进行以下操作:</p>
+<ol>
+<li>比较第一项和第二项;</li>
+<li>如果第一项应该排在第二项之后, 那么两者交换顺序;</li>
+<li>比较第二项和第三项;</li>
+<li>如果第二项应该排在第三项之后, 那么两者交换顺序;</li>
+<li>以此类推直到完成排序;</li>
+</ol>
+<p><strong>实例说明:</strong></p>
+<p>将数组[3, 2, 4, 5, 1]以从小到大的顺序进行排序:</p>
+<ol>
+<li>3应该在2之后, 因此交换, 得到[2, 3, 4, 5, 1];</li>
+<li>3, 4顺序不变, 4, 5也不变, 交换5, 1得到[2, 3, 4, 1, 5];</li>
+<li>第一次遍历结束, 数组中最后一项处于正确位置不会再有变化, 因此下一次遍历可以排除最后一项;</li>
+<li>开始第二次遍历, 最后结果为[2, 3, 1, 4, 5], 排除后两项进行下一次遍历;</li>
+<li>第三次遍历结果为[2, 1, 3, 4, 5];</li>
+<li>最后得到[1, 2, 3, 4, 5], 排序结束;</li>
+</ol>
+<p><strong>代码实现:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">swap</span>(<span class="params">items, firstIndex, secondIndex</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> temp = items[firstIndex];</span><br><span class="line">  items[firstIndex] = items[secondIndex];</span><br><span class="line">  items[secondIndex] = temp;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">items</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> len = items.length, i, j, stop;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++)&#123;</span><br><span class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>, stop = len-i; j &lt; stop; j++)&#123;</span><br><span class="line">      <span class="keyword">if</span> (items[j] &gt; items[j+<span class="number">1</span>])&#123;</span><br><span class="line">        swap(items, j, j+<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> items;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>外层的循环决定需要进行多少次遍历, 内层的循环负责数组内各项的比较, 还通过外层循环的次数和数组长度决定何时停止比较.  </p>
+<p>冒泡排序极其低效, 因为处理数据的步骤太多, 对于数组中的每<code>n</code>项, 都需要<code>n^2</code>次操作来实现该算法(实际比n^2略小, 但可以忽略, 具体原因见⤵️), 即时间复杂度为<code>O(n^2)</code>.</p>
+<blockquote>
+<p>对于含有n个元素的数组, 需要进行<code>(n-1)+(n-2)+...+1</code>次操作, 而<code>(n-1)+(n-2)+...+1 = n(n-1)/2 = n^2/2 - n/2</code>, 如果n趋于无限大, 那么n/2的大小对于整个算式的结果影响可以忽略, 因此最终的时间复杂度用<code>O(n^2)</code>表示</p>
+</blockquote>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序对一个需要进行排序的数组进行以下操作:</p>
+<ol>
+<li>假定数组中的第一项为最小值(min);</li>
+<li>比较第一项和第二项的值;</li>
+<li>若第二项比第一项小, 则假定第二项为最小值;</li>
+<li>以此类推直到排序完成.</li>
+</ol>
+<p><strong>实例说明:</strong></p>
+<p>将数组[“b”, “a”, “d”, “c”, “e”]以字母a-z的顺序进行排序:</p>
+<ol>
+<li>假定数组中第一项”b”(index0)为min;</li>
+<li>比较第二项”a”与第一项”b”, 因”a”应在”b”之前的顺序, 故”a”(index1)为min;</li>
+<li>然后将min与后面几项比较, 由于”a”就是最小值, 因此min确定在index1的位置;</li>
+<li>第一次遍历结束后, 将假定的min(index0), 与真实的min(index1)进行比较, 真实的min应该在index0的位置, 因此将两者交换, 第一次遍历交换之后的结果为[“a”, “b”, “d”, “c”, “e”];</li>
+<li>然后开始第二次遍历, 遍历从第二项(index1的位置)开始, 这次假定第二项为最小值, 将第二项与之后几项逐个比较, 因为”b”就在应该存在的位置, 所以不需要进行交换, 这次遍历之后的结果为”a”, “b”, “d”, “c”, “e”];</li>
+<li>之后开始第三次遍历, “c”应为这次遍历的最小值, 交换index2(“d”), index3(“c”)位置, 最后结果为[“a”, “b”, “c”, “d”, “e”];</li>
+<li>最后一次遍历, 所有元素在应有位置, 不需要进行交换.</li>
+</ol>
+<p><strong>代码实现:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">swap</span>(<span class="params">items, firstIndex, secondIndex</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> temp = items[firstIndex];</span><br><span class="line">  items[firstIndex] = items[secondIndex];</span><br><span class="line">  items[secondIndex] = temp;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">selectionSort</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">let</span> items = [...document.querySelectorAll(<span class="string">'.num-queue span'</span>)].map(<span class="function"><span class="params">num</span> =&gt;</span> +num.textContent);</span><br><span class="line">  <span class="keyword">let</span> len = items.length, min;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++)&#123;</span><br><span class="line">    min = i;</span><br><span class="line">    <span class="keyword">for</span>(j = i + <span class="number">1</span>; j &lt; len; j++)&#123;</span><br><span class="line">      <span class="keyword">if</span>(items[j] &lt; items[min])&#123;</span><br><span class="line">        min = j;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(i != min)&#123;</span><br><span class="line">      swap(items, i, min);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> items;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>外层循环决定每次遍历的初始位置, 从数组的第一项开始直到最后一项. 内层循环决定哪一项元素被比较.</p>
+<p>选择排序的时间复杂度为<code>O(n^2)</code>.</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>与上述两种排序算法不同, 插入排序是稳定排序算法(stable sort algorithm), 稳定排序算法指不改变列表中相同元素的位置, 冒泡排序和选择排序不是稳定排序算法, 因为排序过程中有可能会改变相同元素位置. 对简单的值(数字或字符串)排序时, 相同元素位置改变与否影响不是很大. 而当列表中的元素是对象, 根据对象的某个属性对列表进行排序时, 使用稳定排序算法就很有必要了.</p>
+<p>一旦算法包含交换(swap)这个步骤, 就不可能是稳定的排序算法. 列表内元素不断交换, 无法保证先前的元素排列为止一直保持原样. 而插入排序的实现过程不包含交换, 而是提取某个元素将其插入数组中正确位置.</p>
+<p>插入排序的实现是将一个数组分为两个部分, 一部分排序完成, 一部分未进行排序. 初始状态下整个数组属于未排序部分, 排序完成部分为空. 然后进行排序, 数组内的第一项被加入排序完成部分, 由于只有一项, 自然属于排序完成状态. 然后对未完成排序的余下部分的元素进行如下操作:</p>
+<ol>
+<li>如果这一项的值应该在排序完成部分最后一项元素之后, 保留这一项在原有位置开始下一步;</li>
+<li>如果这一项的值应该排在排序完成部分最后一项元素之前, 将这一项从未完成部分暂时移开, 将已完成部分的最后一项元素移后一个位置;</li>
+<li>被暂时移开的元素与已完成部分倒数第二项元素进行比较;</li>
+<li>如果被移除元素的值在最后一项与倒数第二项的值之间, 那么将其插入两者之间的位置, 否则继续与前面的元素比较, 将暂移出的元素放置已完成部分合适位置. 以此类推直到所有元素都被移至排序完成部分.</li>
+</ol>
+<p><strong>实例说明:</strong></p>
+<p>现在需要将数组<code>var items = [5, 2, 6, 1, 3, 9];</code>进行插入排序:</p>
+<ol>
+<li>5属于已完成部分, 余下元素为未完成部分. 接下来提取出2, 因为5比2大, 于是5被移至靠右一个位置, 覆盖2, 占用2原本存在的位置. 这样本来存放5的位置(已完成部分的首个位置)就被空出, 而2在比5小, 因此将2置于这个位置, 此时结果为[2, 5, 6, 1, 3, 9];</li>
+<li>接下来提取出6, 因为6比5大, 所以不操作提取出1, 1与已完成部分各个元素(2, 5, 6)进行比较, 应该在2之前, 因此2, 5, 6各向右移一位, 1置于已完成部分首位, 此时结果为[1, 2, 5, 6, 3, 9];</li>
+<li>对余下未完成元素进行类似操作, 最后得出结果[1, 2, 3, 5, 6, 9];</li>
+</ol>
+<p><strong>代码实现:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertionSort</span>(<span class="params">items</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> len = items.length, value, i, j;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">    value = items[i];</span><br><span class="line">    <span class="keyword">for</span> (j = i<span class="number">-1</span>; j &gt; <span class="number">-1</span> &amp;&amp; items[j] &gt; value; j--) &#123;</span><br><span class="line">      items[j+<span class="number">1</span>] = items[j];</span><br><span class="line">    &#125;</span><br><span class="line">    items[j+<span class="number">1</span>] = value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> items;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>外层循环的遍历顺序是从数组的第一位到最后一位, 内层循环的遍历则是从后往前, 内层循环同时负责元素的移位.</p>
+<p>插入排序的时间复杂度为<code>O(n^2)</code></p>
+<p><strong>以上三种排序算法都十分低效, 因此实际应用中不要使用这三种算法, 遇到需要排序的问题, 应该首先使用JavaScript内置的方法<code>Array.prototype.sort()</code>;</strong></p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=IEOO5UToo6A&amp;list=PLhQjrBD2T383Xfn0zECHrOTpfOSlptPAB&amp;index=7" target="_blank" rel="noopener">2015-CS50-week-算法</a></li>
+<li><a href="https://www.nczonline.net/blog/tag/computer-science/" target="_blank" rel="noopener">排序算法-JavaScript描述</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/03/07/array-stack-queue/" class="prev">PREV</a><a href="/posts/2017/03/04/innertext-reflow-dom/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

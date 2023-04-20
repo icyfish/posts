@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> Mac下安装npm包出现错误 · Fish</title><meta name="description" content="Mac下安装npm包出现错误 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Mac下安装npm包出现错误</h1><div class="post-info">Jul 6, 2017</div><div class="post-content"><p>在Mac下安装某些npm包时会返回这样的错误信息:<br><code>env: node\r: No such file or directory</code>. 从错误信息的<code>\r</code>中可以推测出可能是代码行末字符的原因. </p>
+<a id="more"></a>
+<p>编辑文本文件时, 在我们按下回车键之后, 虽然从编辑器中看不出什么不同, 但是实际上插入了一个隐藏的字符, 我们称其为”line ending”(行末字符). 不同的操作系统处理行末字符的方式不同. </p>
+<p>DOS/Windows下, 行末字符为<code>\r\n</code>, 而在Unix下, 行末字符是<code>\n</code>. </p>
+<p>那么, 问题就可以这样解决, 假设你在全局安装了xxx包:</p>
+<ol>
+<li><p>首先从Terminal进入该npm包可执行文件所在的目录, 我是在: <code>/usr/local/lib/node_modules/xxx/bin</code></p>
+</li>
+<li><p>然后在命令行中执行<code>sudo vim xxx</code></p>
+</li>
+<li><p>进入vim后输入命令: <code>:set ff=unix</code></p>
+</li>
+</ol>
+<p>除了上述解决方式, 还可以使用<a href="https://sourceforge.net/projects/dos2unix/" target="_blank" rel="noopener">dos2unix</a>.</p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://github.com/nwjs-community/nw-builder/issues/75" target="_blank" rel="noopener">GitHub Issue</a></li>
+<li><a href="https://help.github.com/articles/dealing-with-line-endings/" target="_blank" rel="noopener">Dealing with line endings</a></li>
+<li><a href="http://www.cs.toronto.edu/~krueger/csc209h/tut/line-endings.html" target="_blank" rel="noopener">DOS vs. Unix Line Endings</a></li>
+<li><a href="https://stackoverflow.com/questions/82726/convert-dos-line-endings-to-linux-line-endings-in-vim" target="_blank" rel="noopener">Convert DOS line endings to Linux line endings in vim</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/07/10/cookie-the-basics/" class="prev">PREV</a><a href="/posts/2017/06/05/dom-manipulation/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

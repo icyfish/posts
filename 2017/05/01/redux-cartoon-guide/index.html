@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> [译]看漫画理解Redux · Fish</title><meta name="description" content="[译]看漫画理解Redux - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">[译]看漫画理解Redux</h1><div class="post-info">May 1, 2017</div><div class="post-content"><p>原文: <a href="https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6" target="_blank" rel="noopener">A cartoon guide to Redux</a><br>作者: <a href="https://code-cartoons.com/@linclark" target="_blank" rel="noopener">Lin Clark</a><br>原文发布时间: 2015.10.21</p>
+<a id="more"></a>
+<p style="font-size: 1.5em; margin: .67em 0; font-weight: 700">译文:</p>
+
+<p>Flux架构模式或许给许多人带来了很大困惑, 但大家接触到Redux之后, 发现区别Flux和Redux是个更困难的挑战, Redux模式借鉴了Flux的许多概念, 在这篇文章中我将以漫画的形式详细解释这两者的区别. </p>
+<p>在阅读本文前, 建议先阅读: 看漫画理解Flux(<a href="https://code-cartoons.com/a-cartoon-guide-to-flux-6157355ab207" target="_blank" rel="noopener">英文</a>, <a href="https://icyfish.github.io/posts/2017/04/27/flux-cartoon-guide/">中文</a>).</p>
+<p><img src="/posts/images/redux-intro.png" alt="redux-intro"></p>
+<h2 id="为何改进Flux"><a href="#为何改进Flux" class="headerlink" title="为何改进Flux"></a>为何改进Flux</h2><p>Redux和Flux能够解决同样的问题, 甚至更多.</p>
+<p>和Flux一样, Redux使得应用中的state变化变得可预测. 想要改变state, 必须要发出一个action, 没有其他直接改变state的方法, 因为存储state的store只有getter, 没有setter. Flux和Redux的基本概念几乎无异.</p>
+<p>那么为什么不使用Flux却要设计一个新的架构模式呢? 因为Redux的开发者Dan Abramov觉得Flux还有许多可以改进的地方, 改进之后就能有一个更好的开发工具, 于是他创造了Redux, 而且仍然保持Flux模式的可预测state变化的能力. </p>
+<p>Flux没有热重载和时间旅行调试, 这篇文章(<a href="https://code-cartoons.com/hot-reloading-and-time-travel-debugging-what-are-they-3c8ed2812f35" target="_blank" rel="noopener">英文</a>,<a href="https://icyfish.github.io/posts/2017/05/01/hot-reloading-time-travel/">中文</a>)详细解释了这两个概念. 因此使用Flux架构的应用在调试时会遇到比较多的问题.</p>
+<h3 id="问题1-重载描述store的代码会重置state"><a href="#问题1-重载描述store的代码会重置state" class="headerlink" title="问题1: 重载描述store的代码会重置state"></a>问题1: 重载描述store的代码会重置state</h3><p>在Flux中, store包含以下两部分内容:</p>
+<ol>
+<li>state变化的逻辑</li>
+<li>该store当前的state</li>
+</ol>
+<p>将以上两者置于同一个对象中注定无法实现热重载. 当我们重载store对象以观察更新后的state效果时, 就失去了store当前所存储的state. 同时还会将关联该store与系统其他部分的订阅事件搞混. </p>
+<p><img src="/posts/images/redux-todo.png" alt="redux-todo"></p>
+<p><strong>解决方案</strong></p>
+<p>将对象分离, 即使用两个对象, 一个对象存储state, 这个对象无法被重载; 另一个对象包含所有state变化的逻辑, 这个对象可以被重载, 不需要存储state.</p>
+<p><img src="/posts/images/redux-separate-store.png" alt="redux-separate-store"></p>
+<h3 id="问题2-每接收一个action-state都会被重写"><a href="#问题2-每接收一个action-state都会被重写" class="headerlink" title="问题2: 每接收一个action, state都会被重写"></a>问题2: 每接收一个action, state都会被重写</h3><p>在时间旅行调试中, 我们会追踪每一个阶段的state对象, 这样就能获取任意一个阶段的state对象信息.</p>
+<p>为了实现这个目标, 每一次state改变后, 我们都要将旧的state添加到存储state对象的数组中, 可是由于<a href="https://icyfish.github.io/posts/2016/10/28/objects-functions/#值-by-value-与引用-by-reference">JavaScript对象通过引用传递的特性</a>, 简单将变量添加到数组中不能达到目的, 因为这样无法创建新的对象拷贝, 只是创建了一个指向相同对象的指针. </p>
+<p>因此, 每一个阶段的state都要保存在不同的对象中, 这样就能避免直接改变历史版本的state.</p>
+<p><img src="/posts/images/redux-rewrite-state.png" alt="redux-rewrite-state"></p>
+<p><strong>解决方案</strong></p>
+<p>当action传送到store时, 不要通过直接改变state处理action, 而应该拷贝state, 对拷贝后的state进行修改.</p>
+<p><img src="/posts/images/redux-copy-state.png" alt="redux-copy-state"></p>
+<h3 id="问题3-难以引入第三方插件"><a href="#问题3-难以引入第三方插件" class="headerlink" title="问题3: 难以引入第三方插件"></a>问题3: 难以引入第三方插件</h3><p>开发者工具的扩展性十分重要, 开发者应该能够方便地在工具中添加自己需要的第三方插件, 不需要在整合第三方插件与工具这方面下太多功夫.</p>
+<p>因此, 我们需要一些”扩展工具点”.</p>
+<p>一个典型的例子是日志, 比如接收到action时, 我们希望<code>console.log()</code>action的信息, 处理完该action后, <code>console.log()</code>更新后的state信息, 在Flux中, 要想达到这个目的, 需要订阅dispatcher及每一个store的更新, 但这部分代码并不属于业务逻辑, 却需要自己完成, 因为无法借助第三方模块简单实现. </p>
+<p><img src="/posts/images/redux-no-third.png" alt="redux-no-third"></p>
+<p><strong>解决方案</strong></p>
+<p>将系统的某些打包进其他对象中, 这些对象均有一个原始版本, 开发者可以在原始版本的基础上添加所需功能. 我们可以把”扩展工具点”看做是”增强器(enhancer)”, “高阶”对象(higher order objects)或者是中间件(middleware)</p>
+<p>另外, 运用”树”型结构来组织state变化的逻辑, 这样store就只需要分发(dispatch)一个事件来通知视图state发生变化. 等整个state树中的所有reducer处理完成之后, 视图才会接收到该事件. </p>
+<p><img src="/posts/images/redux-tree.png" alt="redux-tree"></p>
+<p><em>注: 上述的几个问题和解决方案的示例均是开发者工具使用的角度出发. 但实际上在其他方面, 上述结论也成立. 除了以上差异之外, Redux和Flux之间还存在其他差异. 比如, Redux精简了冗余代码, 使得我们更容易复用store中的逻辑, 这里有个列表, 详细列出了<a href="http://stackoverflow.com/questions/32461229/why-use-redux-over-facebook-flux/32920459#32920459" target="_blank" rel="noopener">Redux的优势</a>.</em></p>
+<p>现在我们来看看Redux是如何实现这些功能的.</p>
+<h2 id="新的人物"><a href="#新的人物" class="headerlink" title="新的人物"></a>新的人物</h2><p>Redux中的人物与Flux并非完全相同. </p>
+<h3 id="The-action-creators"><a href="#The-action-creators" class="headerlink" title="The action creators"></a>The action creators</h3><p><img src="/posts/images/flux-creator.png" alt="flux-creator"></p>
+<p>Redux与Flux中的action creator相同. 当我们想要改变应用的state时, 就发出一个action, 这也是state改变的唯一方式.</p>
+<p>我在谈Flux的文章(<a href="https://code-cartoons.com/a-cartoon-guide-to-flux-6157355ab207" target="_blank" rel="noopener">原文</a>, <a href="https://icyfish.github.io/posts/2017/04/27/flux-cartoon-guide/">译文</a>)中提到, 把action creator看做是电报员. 你把想要传送的信息交给电报员, 它会转换好信息格式以便系统的其他部分理解.</p>
+<p><span style="
+  background-image: linear-gradient(to bottom,#ebfdf1,#ebfdf1);
+  background-color: transparent; padding: 4px
+">和Flux不同的是, Redux中的action creator不会直接发送action到dispatcher, 而是返回一个已转换好格式的action对象.</span></p>
+<h3 id="The-store"><a href="#The-store" class="headerlink" title="The store"></a>The store</h3><p>在Flux中, 我把store看做是控制欲过强的领导者. 所有state变化都必须由它亲自来完成, 只有通过action才可以改变state, 无法直接修改. Redux中的store依旧控制欲强且官僚主义, 但有一点不同.</p>
+<p><img src="/posts/images/flux-store.png" alt="flux-store"></p>
+<p>Flux中有多个store, 每个store中所控制的区域不同, store对其所负责区域有完全掌控权, 均储存着各自的state, 控制那部分state改变的逻辑.</p>
+<p>而在Redux中只有1个store, 因此该store将责任委托以减轻它的负担.</p>
+<p>Redux store只负责保存整体的state树, 它将检视state变化的任务委托给reducer, 应用中有许多reducer, 其中root reducer负责对其他reducer进行领导管理.</p>
+<p>可以发现, 在Redux中没有dispatcher, 因为store接管了dispathcer的工作.</p>
+<h3 id="The-reducers"><a href="#The-reducers" class="headerlink" title="The reducers"></a>The reducers</h3><p>当store想知道action如何改变state时, 它就会向reducer咨询. root reducer负责告知store其所要求的信息. root reducer会根据state对象的键(key)将state分成多个部分, 然后将分离后的每一部分的state传给其下的reducer, reducer知道如何处理这些state. </p>
+<p><img src="/posts/images/redux-reducer.png" alt="redux-reducer"></p>
+<p>我把这些reducer看做是一群热衷于拷贝工作的白领. 它们不希望自己所处理的文件乱成一团, 因此对于传送来的文件(即分离的state), 它们不会直接对其进行修改, 而是拷贝一份之后对拷贝执行修改. </p>
+<p>这是Redux的核心思想之一. 不可直接操作state对象, 需要对其执行分离后进行修改, 再将修改后的部分合并为一个新的state对象. </p>
+<p>各个reducer将分离的state拷贝修改之后传给root reducer, root reducer将修改过的各个state进行合并, 组成一个新的state对象. 然后root reducer将新的state对象返回给store, store将该state升级为正式的state. </p>
+<p>如果你现在正在开发的只是一个小应用, 那么整个应用或许只需要一个reducer负责拷贝state对象以及改变state的值, 而大应用则需要多个reducer. 这也是Flux与Redux的另一个不同之处. 在Flux中, 多个store之间没有联系, 它们处于同一等级, 各自完成自己的任务. 而在Redux中, reducer有层级结构, 有多个等级, 就像组件(component)之间也有层级结构一样. </p>
+<h3 id="The-views-smart-and-dumb-components"><a href="#The-views-smart-and-dumb-components" class="headerlink" title="The views: smart and dumb components"></a>The views: smart and dumb components</h3><p>Flux有控制器视图(controller view)和常规视图(regular review)的概念. 控制器视图作为store和view之间的中介, 起着沟通两者的作用.</p>
+<p><img src="/posts/images/flux-controller-view.png" alt="flux-controller-view"></p>
+<p>Redux中有与此相似的概念: 容器组件(smart component)与展示组件(dumb component). 容器组件是中介, 但比控制器视图遵循更多的规则: </p>
+<ul>
+<li><p>容器组件负责action, 如果容器组件中包含的某个展示组件需要触发一个action, 容器组件就会通过props传递一个函数给展示组件, 然后展示组件在有需要时调用该函数. </p>
+</li>
+<li><p>容器组件不定义CSS样式</p>
+</li>
+<li><p>大部分情况下, 容器组件不产生DOM节点, 它们给展示组件指令, 让展示组件产生DOM节点.</p>
+</li>
+</ul>
+<p>展示组件不直接依赖action文件, 因为所有action的传递都通过props, 这样一来, 即使应用的逻辑不同, 展示组件也可以在它们中进行复用. 展示组件会定义自身所需的CSS样式(我们也能够自定义样式, 只需在组件中设置样式相关的属性添加需要的样式, 使其与默认样式合并即可).</p>
+<h3 id="The-view-layer-binding"><a href="#The-view-layer-binding" class="headerlink" title="The view layer binding"></a>The view layer binding</h3><p><img src="/posts/images/redux-view-binding.png" alt="redux-view-binding"></p>
+<p>Redux无法直接将store与view绑定, 需要view layer binding(视图层绑定系统)的帮助. 如果你开发过react与redux结合的应用, 那么你肯定知道react-redux, react-redux就是视图层绑定系统. </p>
+<p>view layer binding有点像视图树的IT部门, 它确保所有组件与store关联, 还负责处理许多技术细节, 这样系统的其他部分即使不明白系统某些部分的运作也没有关系. </p>
+<p>view layer binding引入了3个概念: </p>
+<ol>
+<li><code>Provider</code>组件: 它包围着组件树, 使根组件的子组件更容易使用<code>connect()</code>与store相关联.</li>
+<li><code>connect()</code>: react-redux库提供的函数. 如果某个组件想要更新state, 就要将该组件以参数形式传入<code>connect()</code>, 之后connect函数就会利用选择器(selector)配置好所有关联.</li>
+<li>selector: 是开发者自定义的一个函数, 在其中声明组件需要state的哪些部分作为属性.</li>
+</ol>
+<h3 id="The-root-component"><a href="#The-root-component" class="headerlink" title="The root component"></a>The root component</h3><p><img src="/posts/images/redux-root-component.png" alt="redux-root-component"></p>
+<p>所有React应用都有根组件(root component), 根组件归根结底就是处于组件等级结构中顶层的组件. 然而在Redux应用中, 根组件需要处理更多的事.</p>
+<p>根组件就像是公司中的高管. 为所有团队分工共同完成一项任务. 同时, 根组件还创建store, 告知store应该使用哪个reducer, 并且负责结合视图层绑定系统与视图.</p>
+<h2 id="如何分工合作"><a href="#如何分工合作" class="headerlink" title="如何分工合作"></a>如何分工合作</h2><p>现在我们来看看各部分是如何分工合作的.</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>应用中的各部分需要互相配合才能使应用真正发挥其功能. 我们在配置中实现这一步.</p>
+<p>1.<strong>store做好准备.</strong> 根组件创建store并利用<code>createStore()</code>方法告知store使用的root reducer是哪一个. root reducer管理全部reducer, 它利用<code>combineReducers()</code>将全部reducer结合.</p>
+<p><img src="/posts/images/redux-store.png" alt="redux-store"> </p>
+<p>2.<strong>设置store与组件之间的通信.</strong> 根组件将所有附属组件包裹在 <code>Provider</code>组件中，并且建立Provider与store之间的联系。</p>
+<p><code>Provider</code>创建了某种网络以便于组件的更新. 容器组件通过<code>connect()</code>函数连接到该网络, 这样组件就能够获取state的更新.</p>
+<p><img src="/posts/images/redux-provider.png" alt="redux-provider"></p>
+<p>3.<strong>准备action回调函数.</strong> 为了使展示组件更好地处理action, 容器组件可以用<code>bindActionCreators()</code>设置action回调函数, 这样的话，容器组件就会给展示组件传入一个回调函数。对应的action会在展示组件调用这个回调函数时被自动分发。</p>
+<p><img src="/posts/images/redux-action-callback.png" alt="redux-action-callback"></p>
+<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><p>现在应用配置已完成, 用户可以开始执行操作. 让我们触发一个action来观察数据流.</p>
+<p><img src="/posts/images/redux-data-flow.png" alt="redux-data-flow"></p>
+<p>1.view请求action, action creator转化好action格式之后将其返回.</p>
+<p><img src="/posts/images/redux-data-flow1.png" alt="redux-data-flow1"></p>
+<p>2.action被分发的形式有两种, 如果配置阶段使用了<code>bindActionCreators()</code>, action就会被自动分发, 否则由视图分发.</p>
+<p><img src="/posts/images/redux-data-flow2.png" alt="redux-data-flow2"></p>
+<p>3.store接收action, 将当前state树和action发送给root reducer.</p>
+<p><img src="/posts/images/redux-data-flow3.png" alt="redux-data-flow3"></p>
+<p>4.root reducer把state tree分成多个部分. 将每部分传至附属reducer, 附属reducer知道如何处理state.</p>
+<p><img src="/posts/images/redux-data-flow4.png" alt="redux-data-flow4"></p>
+<p>5.附属reducer拷贝自己负责的那部分state, 然后对拷贝执行修改, 之后返回修改后的拷贝到root reducer.</p>
+<p><img src="/posts/images/redux-data-flow5.png" alt="redux-data-flow5"></p>
+<p>6.一旦所有附属reducer返回所负责state拷贝后, root reducer将这些分离的state组合成一个完整全新的state树, 将其返回store, 然后store就用新的state树代替旧的state.</p>
+<p><img src="/posts/images/redux-data-flow6.png" alt="redux-data-flow6"></p>
+<p>7.store告知view layer binding已经更新过state树.</p>
+<p><img src="/posts/images/redux-data-flow7.png" alt="redux-data-flow7"></p>
+<p>8.view layer binding向store请求新的state树.</p>
+<p><img src="/posts/images/redux-data-flow8.png" alt="redux-data-flow8"></p>
+<p>9.view layer binding触发重新渲染.</p>
+<p><img src="/posts/images/redux-data-flow9.png" alt="redux-data-flow9"></p>
+<p>这是我对Redux以及它与Flux之间差异的理解, 希望能够帮到大家!</p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="http://rackt.org/redux/index.html" target="_blank" rel="noopener">Redux docs</a></li>
+<li><a href="https://www.youtube.com/watch?v=xsSnOQynTHs" target="_blank" rel="noopener">Dan Abramov’s React Europe talk</a></li>
+<li><a href="https://medium.com/@dan_abramov/the-evolution-of-flux-frameworks-6c16ad26bb31" target="_blank" rel="noopener">The Evolution of Flux Frameworks</a></li>
+<li><a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0" target="_blank" rel="noopener">Smart and Dumb Components</a></li>
+<li><a href="http://stackoverflow.com/a/32920459" target="_blank" rel="noopener">The upsides of using Redux</a></li>
+<li><a href="http://stackoverflow.com/a/32916602" target="_blank" rel="noopener">The downsides of using Redux</a></li>
+<li><a href="https://devchat.tv/js-jabber/181-jsj-the-evolution-of-flux-libraries-with-andrew-clark-and-dan-abramov" target="_blank" rel="noopener">JS Jabber: The Evolution of Flux Libraries with Andrew Clark and Dan Abramov</a></li>
+</ul>
+<hr>
+<p><strong>注: 初学redux时看到的文章, 想要通过翻译深入理解, 因此翻译的质量可能不是太好, 内容会在学习的过程中不断改进.</strong></p>
+<p><strong>翻译完成后发现之前已经有人翻过这篇文章, 是更好的一个版本: <a href="https://github.com/jasonslyvia/a-cartoon-intro-to-redux-cn/tree/gh-pages" target="_blank" rel="noopener">译文</a>.</strong></p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/05/01/hot-reloading-time-travel/" class="prev">PREV</a><a href="/posts/2017/04/27/flux-cartoon-guide/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

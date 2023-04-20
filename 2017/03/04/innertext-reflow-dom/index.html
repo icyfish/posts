@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> innerText与几种DOM方法 · Fish</title><meta name="description" content="innerText与几种DOM方法 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">innerText与几种DOM方法</h1><div class="post-info">Mar 4, 2017</div><div class="post-content"><p>介绍innerText, textContent, innerHTML的区别, 引起重排的几种情况, 以及几种常用的DOM方法.</p>
+<a id="more"></a>
+<h2 id="innerText-textContent-innerHTML"><a href="#innerText-textContent-innerHTML" class="headerlink" title="innerText, textContent, innerHTML:"></a>innerText, textContent, innerHTML:</h2><ol>
+<li><code>textContent</code>可以获取所有元素节点的文本内容, 包括<code>&lt;script&gt;</code>和<code>&lt;style&gt;</code>中的, 而IE专属属性<code>innerText</code>不会获取.</li>
+<li><code>innerText</code>受样式影响, 不返回隐藏元素的文本, 而<code>textContent</code>会.</li>
+<li>因为<code>innerText</code>受样式影响, 所以改变后会触发重排(reflow), 而<code>textContent</code>不会触发.</li>
+<li><code>innerHTML</code>获取的是元素节点, 但很多人用<code>innerHTML</code>来获取或改变某个DOM元素的文本内容, 但实际上应该使用<code>textContent</code>, 这样就不会被解析为HTML, 对性能的影响较小, 还能避免XSS恶意程序的攻击.</li>
+</ol>
+<h2 id="重排"><a href="#重排" class="headerlink" title="重排"></a>重排</h2><p>重排会重新安排页面的布局, 在一个元素节点中的重排指重新计算该元素的尺寸和位置, 并且会触发该元素子节点, 祖先元素的重排, 以及在出现在该元素之后的DOM元素的重排(下面有示例), 最后进行一次重绘(repaint). 重排是个很容易引起的现象, 但是对性能的影响很大, 在很多情况下相当于对整个页面的布局进行重新安排, 因此要尽量避免重排.</p>
+<p>&lt;<strong>重绘:</strong> 元素在页面中显示出来的样式发生改变, 就会引起重绘, 但此时元素的布局并未发生改变. 样式的改变的一些例子: 轮廓线(outline), 可见性(visibility), 背景颜色(background color).&gt;</p>
+<p>下列情况会引起重排:</p>
+<ul>
+<li>插入, 移除, 更新DOM中的元素</li>
+<li>改变页面内容, 如改变输入框中的文本</li>
+<li>移动DOM元素</li>
+<li>给DOM元素加动画效果</li>
+<li>计算元素的样式值, 如offsetHeight或getComputedStyle</li>
+<li>改变CSS样式</li>
+<li>改变元素的className</li>
+<li>添加或移除样式表</li>
+<li>改变视窗大小</li>
+<li>滚屏</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">”error”</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h4</span>&gt;</span>My Module<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span>&gt;</span>Error:<span class="tag">&lt;/<span class="name">strong</span>&gt;</span>Description of the error…<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h5</span>&gt;</span>Corrective action required:<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ol</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span>&gt;</span>Step one<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">li</span>&gt;</span>Step two<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">ol</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在以上部分代码中, <code>&lt;p&gt;&lt;/p&gt;</code>的重排会引起子节点<code>&lt;strong&gt;&lt;/strong&gt;</code>, 祖先元素<code>&lt;div class=”error”&gt;&lt;/div&gt;</code>(和<code>&lt;body&gt;&lt;/body&gt;</code>[取决于浏览器]), 紧接其后的元素<code>&lt;h5&gt;&lt;/h5&gt;</code>和<code>&lt;ol&gt;&lt;/ol&gt;</code>的重排, 在Opera浏览器中, 大部分重排会引起页面的重新渲染.</p>
+<h2 id="几种常用DOM方法"><a href="#几种常用DOM方法" class="headerlink" title="几种常用DOM方法"></a>几种常用DOM方法</h2><h3 id="appendChild"><a href="#appendChild" class="headerlink" title="appendChild"></a>appendChild</h3><p><code>node.appendChild(newnode);</code></p>
+<p>在父节点node下添加一个子节点newnode, 添加位置在原有子节点的末尾, 返回新添加的节点;</p>
+<h3 id="insertBefore"><a href="#insertBefore" class="headerlink" title="insertBefore"></a>insertBefore</h3><p><code>node.insertBefore(newnode, existingchild);</code></p>
+<p>在父节点node下, 已存在的子节点existingchild前添加一个子节点newnode, 返回插入的节点;</p>
+<p><strong>将新建子节点置于父节点下首位:</strong><br>(父节点下需至少含有一个子节点)</p>
+<p><code>parent.insertBefore(new, parent.firstChild);</code></p>
+<p><strong>将新建子节点置于父节点下末尾:</strong><br>(相当于appendChild)</p>
+<p><code>parent.insertBefore(new, null);</code></p>
+<h3 id="nodeType"><a href="#nodeType" class="headerlink" title="nodeType"></a>nodeType</h3><p><code>var type = node.nodeType</code>;</p>
+<p>节点类型, 用数字标识, 共有12种节点类型, 其中Element(元素)的nodeType为1, Attr(属性) = 2, Text(文本) = 3.</p>
+<h3 id="childNodes"><a href="#childNodes" class="headerlink" title="childNodes"></a>childNodes</h3><p><code>var kids = node.childNodes;</code></p>
+<p>获取父节点node的第一层所有类型的子节点集合, 返回的是NodeList, 并非数组, 如果要转化成数组需要用<code>Array.from()</code>或者<code>...</code>(spread operator).</p>
+<h3 id="children"><a href="#children" class="headerlink" title="children"></a>children</h3><p><code>var children = node.children;</code></p>
+<p>获取父节点node下的所有第一层元素子节点.</p>
+<h3 id="firstChild"><a href="#firstChild" class="headerlink" title="firstChild"></a>firstChild</h3><p><code>var child = node.firstChild;</code></p>
+<p>获取父节点node的第一层第一个子节点, 若不存在则返回null.</p>
+<h3 id="firstElementChild"><a href="#firstElementChild" class="headerlink" title="firstElementChild"></a>firstElementChild</h3><p><code>var element = node.firstElementChild;</code></p>
+<p>获取父节点node的第一层第一个元素子节点.</p>
+<h3 id="lastElementChild"><a href="#lastElementChild" class="headerlink" title="lastElementChild"></a>lastElementChild</h3><p><code>var element = node.lastElementChild;</code></p>
+<p>获取父节点node的第一层最后一个元素子节点.</p>
+<h3 id="childElementCount"><a href="#childElementCount" class="headerlink" title="childElementCount"></a>childElementCount</h3><p><code>var count = node.childElementCount;</code></p>
+<p>获取父节点node的第一层元素子节点个数, 相当于 <code>node.children.length</code></p>
+<h3 id="removeChild"><a href="#removeChild" class="headerlink" title="removeChild"></a>removeChild</h3><p><code>node.removeChild(oldnode);</code></p>
+<p>从父节点node中移除某个子节点oldnode, 返回被移除的节点.</p>
+<h3 id="replaceChild"><a href="#replaceChild" class="headerlink" title="replaceChild"></a>replaceChild</h3><p><code>node.replaceChild(newchild, existingchild);</code></p>
+<p>在父节点node下用newchild替换已存在子节点existingchild, 返回被移除的节点;</p>
+<h3 id="createElement"><a href="#createElement" class="headerlink" title="createElement"></a>createElement</h3><p><code>document.createElement([tagname]);</code></p>
+<p>在document下创建元素;</p>
+<h3 id="createTextNode"><a href="#createTextNode" class="headerlink" title="createTextNode"></a>createTextNode</h3><p><code>document.createTextNode(&#39;some text&#39;);</code></p>
+<p>在document下创建一个内容为’some text’的文字节点;</p>
+<p><strong>用法:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> element = <span class="built_in">document</span>.createElement(<span class="string">'h1'</span>);</span><br><span class="line"></span><br><span class="line">element.appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">'some text'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果: &lt;h1&gt;some text&lt;/h1&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/24427621/innertext-vs-innerhtml-vs-label-vs-text-vs-textcontent-vs-outertext" target="_blank" rel="noopener">innerText和textContent的区别</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent#Differences_from_innerText" target="_blank" rel="noopener">MDN - textContent</a></li>
+<li><a href="http://stackoverflow.com/questions/27637184/what-is-dom-reflow" target="_blank" rel="noopener">reflow是什么</a></li>
+<li><a href="http://stackoverflow.com/questions/2549296/whats-the-difference-between-reflow-and-repaint" target="_blank" rel="noopener">reflow和repaint的区别</a></li>
+<li><a href="http://www.stubbornella.org/content/2009/03/27/reflows-repaints-css-performance-making-your-JavaScript-slow/" target="_blank" rel="noopener">reflow, repaint与性能</a></li>
+<li><a href="http://reference.sitepoint.com/javascript/domcore" target="_blank" rel="noopener">DOM Core</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/03/05/sorting-algorithm/" class="prev">PREV</a><a href="/posts/2017/02/16/learning-web-dev-from-scratch/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

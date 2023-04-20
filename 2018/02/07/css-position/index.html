@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> CSS定位笔记(MDN) · Fish</title><meta name="description" content="CSS定位笔记(MDN) - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">CSS定位笔记(MDN)</h1><div class="post-info">Feb 7, 2018</div><div class="post-content"><p>阅读MDN - CSS定位学习笔记</p>
+<a id="more"></a>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_without_z-index" target="_blank" rel="noopener">没有z-index属性的元素堆叠层级</a></p>
+<p>元素没有z-index属性的情况下, 各个元素在z轴从底部到顶部的顺序如下:</p>
+<ol>
+<li>背景及根元素的border</li>
+<li>后代没有定位属性的block, 根据其在HTML中的顺序排列</li>
+<li>后代有定位属性的元素, 根据其在HTML中的顺序排列</li>
+</ol>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/position" target="_blank" rel="noopener">CSS定位的各个属性</a></p>
+<p>各个属性: (均为计算后属性)</p>
+<ul>
+<li><p><strong>static:</strong> 默认的定位, 相当于没有定位属性, <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>, <code>z-index</code>在此情况下均无效. </p>
+</li>
+<li><p><strong>relative:</strong> 相对定位属性, 含有该属性的元素, 其top/left/bottom/right的值表明该元素相对正常位置(static情况下的位置)的距离. 根据文档的正常流进行定位, 因此元素会被默认添加space, 不会影响任何其他元素的定位. 如果<code>z-index</code>的值不是默认值<code>auto</code>, 会创建一个新的堆叠层, <code>relative</code>属性不作用与含有这些属性的元素: <code>table-*-group</code>, <code>table-row</code>, <code>table-column</code>, <code>table-cell</code>, <code>table-caption</code></p>
+</li>
+<li><p><strong>absolute:</strong> 脱离正常文档流, 不会被默认添加space. 元素相对于其最近的含有定位元素的祖先元素进行定位, 如果没有符合条件的祖先元素, 则相对于其最初的包含块进行定位. 最终的位置由<code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>决定. 如果<code>z-index</code>的值不是默认值<code>auto</code>, 会创建一个新的堆叠层. 这种元素可以有外边距且不和其他外边距重叠. </p>
+</li>
+<li><p><strong>fixed:</strong> 脱离正常文档流, 不会被默认添加space. 相对于屏幕视口的位置, 不会随着页面滚动而改变位置. 最终的位置由<code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>决定, 通常会创建一个新的堆叠层. 当祖先元素含有这些属性之一时: <code>transform</code>, <code>perspective</code>, <code>filter</code>, 那么相对位置的对象就不是视口而是这些祖先元素. In printed documents, the element is placed in the same position on every page.?</p>
+</li>
+<li><p>(<strong>absolute/fixed:</strong> 绝对定位属性, 元素top/left/bottom/right的值表明该元素相对其包含块的距离. 如果元素存在margin外边距, 其相对距离也要相应地变化.)</p>
+</li>
+</ul>
+<ul>
+<li><strong>sticky:</strong> 粘性定位属性, 不脱离正常文档流, 相对于文档流根元素和包含块的位置, 包括表格相关的元素, 相关的距离不会影响任何其他元素的位置. 通常会创建一个新的堆叠层. 根据规范, sticky 属性不作用于含有<code>overflow: hidden</code>或<code>auto</code>的元素.</li>
+</ul>
+<p>大部分情况下, 绝对定位元素<code>height</code>和<code>width</code>值为<code>auto</code>以适应元素内部内容的显示. 不过, non-replaced 绝对定位的元素可以通过声明<code>top</code>和<code>bottom</code>的值, 保存<code>height</code>为默认值<code>auto</code>来补足垂直方向的空间. 水平方向通过改变<code>left</code>和<code>right</code>亦然.</p>
+<p>Note: </p>
+<ul>
+<li>如果<code>top</code>和<code>bottom</code>均声明了值, 以<code>top</code>为准;</li>
+<li>如果<code>left</code>和<code>right</code>均声明了值, 在有从左到右（LTR）阅读习惯的国家, 以<code>left</code>为准, 在有从右向左（RTL）阅读习惯的国家, 以<code>right</code>为准.</li>
+</ul>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_and_float" target="_blank" rel="noopener">浮动块影响元素堆叠</a></p>
+<p>浮动块的位置处于定位块和非定位块之间: </p>
+<p>有浮动块的情况下, 各个元素在z轴从底部到顶部的顺序如下:</p>
+<ol>
+<li>背景及根元素的border</li>
+<li>后代没有定位属性的块级元素, 根据其在HTML中的顺序排列</li>
+<li>浮动块</li>
+<li>后代有定位属性的元素, 根据其在HTML中的顺序排列</li>
+</ol>
+<p>浮动块不会影响没有定位属性的块级元素的层级, 但是会影响元素内部的内容. 因此更加确切的z轴顺序是: </p>
+<ol>
+<li>背景及根元素的border</li>
+<li>后代没有定位属性的块级元素, 根据其在HTML中的顺序排列</li>
+<li>浮动块</li>
+<li>后代没有定位属性的内联元素</li>
+<li>后代有定位属性的元素, 根据其在HTML中的顺序排列</li>
+</ol>
+<p>本例(点击子标题链接进入MDN文章查看)中, 除了未定位的所有块级元素都是半透明的, 以更好地说明层叠的顺序, 如果未定位块(DIV #4)的不透明值改变, 就会发生奇怪的现象: 背景和该块级元素会变成在浮动块和定位块的上层. 这是因为规范比较奇特: 给元素添加opacity值会创建一个新的堆叠层, 详见<a href="https://philipwalton.com/articles/what-no-one-told-you-about-z-index/" target="_blank" rel="noopener">What No One Told You About Z-Index</a></p>
+<p><a href="https://developer.mozilla.org/en/CSS/Understanding_z-index/Adding_z-index" target="_blank" rel="noopener">理解z-index</a></p>
+<p>我们可以在<strong>定位元素</strong>上添加<code>z-index</code>属性, 属性值可以是正整数, 零或负整数, 表明了元素在z轴上的层级. </p>
+<p><code>z-index</code>属性没有声明值时, 默认该元素在0层. </p>
+<p>如果多个元素的<code>z-index</code>值相同, 元素堆叠层级规则遵循<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_without_z-index" target="_blank" rel="noopener">没有z-index属性的元素堆叠层级规则</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2019/06/27/element-in-view/" class="prev">PREV</a><a href="/posts/2018/01/18/react-ref/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> [译]看漫画理解Flux · Fish</title><meta name="description" content="[译]看漫画理解Flux - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">[译]看漫画理解Flux</h1><div class="post-info">Apr 27, 2017</div><div class="post-content"><p>原文: <a href="https://code-cartoons.com/a-cartoon-guide-to-flux-6157355ab207" target="_blank" rel="noopener">A cartoon guide to Flux</a><br>作者: <a href="https://code-cartoons.com/@linclark" target="_blank" rel="noopener">Lin Clark</a><br>原文发布时间: 2015.09.29</p>
+<a id="more"></a>
+<p style="font-size: 1.5em; margin: .67em 0; font-weight: 700">译文:</p>
+
+<p>Flux是现在网页开发领域最流行但很少人对其有深刻理解的一个概念. 这篇文章会从大多数人都能理解的角度对Flux进行解释.</p>
+<p><img src="/posts/images/flux-1.png" alt="flux-1"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>首先, 我想说明Flux的出现是为了解决了什么问题. Flux作为一种架构模式, 其作用是处理应用中的数据. Facebook技术团队为了解决工作过程中遇到的一些问题, 开发了Flux和React, 很多人将它们结合使用, 当然这两者也可以独立使用.</p>
+<p><img src="/posts/images/flux-2.png" alt="flux-2"></p>
+<p>在他们遇到的问题中, 比较典型的一个就是推送的漏洞. 用户登录Facebook时, 会看到信息框的推送小红点. 但当点击信息框, 推送小红点消失, 可实际上用户并没有新信息需要查看. 然后浏览站点几分钟后, 推送通知又会重新出现, 用户就需要为实际上并不存在的新信息多次点击信息框. 正是推送的漏洞导致上述情况的出现.</p>
+<p><img src="/posts/images/flux-3.png" alt="flux-3"></p>
+<p>不只是用户遭遇了推送不断出现的循环, Facebook的开发团队也遭遇了漏洞不断修复又发生的循环, 这一秒问题被解决, 下一秒漏洞又出现, 如此循环往复. </p>
+<p>于是Facebook团队决定想出一种方法一劳永逸地解决这个问题. 他们打算开发一个可预测(状态)的系统, 以确保问题不会不断出现. </p>
+<h3 id="根本问题"><a href="#根本问题" class="headerlink" title="根本问题"></a>根本问题</h3><p>他们发现, 数据在应用中传递的方式是导致该漏洞的根本原因.</p>
+<p><em>注: 这是我从Facebook团队的演讲中分享的简化版本例子中搜集到的资料, 实际的架构必定与此有所差异.</em></p>
+<p><img src="/posts/images/flux-model-view.png" alt="flux-model-view"></p>
+<p>他们让存储数据的模型传递数据到视图层以渲染数据.</p>
+<p>用户操作在视图层发生, 因此视图有时候需要根据用户输入进行更新. 而且在某些情况下, 视图还负责更新其它视图.</p>
+<p>除了以上的几种情况, 这些行为还可以引发一系列的其他改变. 这就像是游戏<a href="http://www.ponggame.org/" target="_blank" rel="noopener">Pong</a>一样, 你很难预测球将会停在哪个地方, 甚至是直接跃出屏幕.</p>
+<p><img src="/posts/images/flux-model-view2.png" alt="flux-model-view2"></p>
+<p>另外, 这些改变还可能以异步的形式发生. 一种改变会引发多种其它改变, 就像是在游戏Pong中扔出许多球, 导致球到处乱飞无法控制.</p>
+<p>总的来说, 这样的架构使得追踪数据流变得极为困难. </p>
+<h2 id="解决方案-单向数据流"><a href="#解决方案-单向数据流" class="headerlink" title="解决方案: 单向数据流"></a>解决方案: 单向数据流</h2><p>于是, Facebook决定尝试一种不一样的架构, 其中数据只能单向流动, 当我们需要插入新数据时, 数据流动又从头开始. 他们将这个架构叫做Flux.</p>
+<p><img src="/posts/images/flux-adsv.png" alt="flux-adsv"></p>
+<p>实际上这个架构模式超级酷, 不过仅从图片上很难看出来. </p>
+<p>一旦我们理解了Flux, 就能明白上述图表所表达的意思. 如果你完全不了解Flux, 就开始阅读文档, 那么这个图表或许对你不会有太大帮助, 然而这个图表的作用却是辅助开发者理解文档, 在我们开始深入学习如何进行某些具体的操作之前, 此图表应该让我们对Flux系统有个整体的把握.</p>
+<p>然而, 真正帮助我更好地理解Flux的并不是这个图表, 不过我自己想出了个好办法, 我将这个系统(Flux)的工作想象成几个不同的人物进行团队合作, 实现一个共同的目标. 这样的思考方式让我对Flux有更深入的理解. 现在我希望把我的想法, 我想象中的几个人物介绍给大家. </p>
+<h2 id="人物介绍"><a href="#人物介绍" class="headerlink" title="人物介绍"></a>人物介绍</h2><p>在详细解释这些人物的分工之前, 我先简单介绍一下它们.</p>
+<h3 id="The-action-creator"><a href="#The-action-creator" class="headerlink" title="The action creator"></a>The action creator</h3><p><img src="/posts/images/flux-creator.png" alt="flux-creator"></p>
+<p>第一个人物是action creator(动作创建者). 它负责创建action, 应用中所有的改变和交互都需要经由它. 当你想要改变应用的状态(state)或渲染不同的视图, 就要”发射”一个action.</p>
+<p>我把action creator看做电报员. 我们把想要传送的信息告知电报员, 电报员帮我们将信息转化成系统其它部分可以理解的格式.</p>
+<p>action creator创建的action包含type(类型)和payload(负载)属性. 我们会预先在系统中定义许多action, 这里type属性值就是其中一种action(系统中的action一般来说是一系列的常量). 例如<code>MESSAGE_CREATE</code>或者<code>MESSAGE_READ</code>就可以是action的type值. </p>
+<p>让系统的一部分知道在应用中可能发生的所有action有个好处: 刚接触项目的开发者一打开action creator文件, 就可以看到全部API, 了解系统中所有可能发生的状态变化.</p>
+<p>一旦创建了action信息, action creator就会将action传送给dispatcher(调度员).</p>
+<h3 id="The-dispatcher"><a href="#The-dispatcher" class="headerlink" title="The dispatcher"></a>The dispatcher</h3><p><img src="/posts/images/flux-dispatcher.png" alt="flux-dispatcher"></p>
+<p>dispatcher(调度员)是回调函数的登记处, 很像是在电话交换台的电话接线员, 它有一份名单列表, 里面记录着所有需要接收action的store, dispatcher接收到action creator的传送过来的action后, 会将其分配给不同的store.</p>
+<p>dispatcher执行操作的方式是同步的, 这样的方式解决了我们之前提到的Pong游戏中的多个球问题. 如果我们要在store之间设置依赖, 即在某个store更新前需要另一个store先执行更新, 那么可以让dispatcher通过<code>waitFor()</code>指令安排好两个store的更新情况.</p>
+<p>Flux的dispatcher与许多其它架构中的dispatcher有所差异. 不管action的type值是什么, action都会被发送到已经在dispatcher处注册过的所有store中. 这表明store不只订阅(subscribe to)一部分action, 而是订阅了全部action, 之后再筛选出需要处理和不需要处理的action. </p>
+<h3 id="The-store"><a href="#The-store" class="headerlink" title="The store"></a>The store</h3><p><img src="/posts/images/flux-store.png" alt="flux-store"></p>
+<p>接下来是store. store里储存着应用的所有state, 这些state改变的逻辑也同时储存在store中. </p>
+<p>我把store看作是控制欲过强的领导者, 它亲自控制所有state变化. 我们不可以直接要求它改变state, store里没有setter, 如果我们想要让state执行改变, 必须通过action creator/dispatcher这一途径提交action以改变state.</p>
+<p>之前提到过, 如果store在dispatcher处已注册, 所有action都会被分发给所有已注册的store. 在store内通常有个switch声明, 根据action的type值决定store是否需要处理该action. 如果是需要处理的action, store会根据action的具体信息更新state.</p>
+<p>一旦store完成state的更新之后, 会发出change事件, 以通知控制器视图(controller view)state已完成更新. </p>
+<h3 id="The-controller-view-and-the-view"><a href="#The-controller-view-and-the-view" class="headerlink" title="The controller view and the view"></a>The controller view and the view</h3><p><img src="/posts/images/flux-controller-view.png" alt="flux-controller-view"></p>
+<p>视图(view)负责接受state并渲染, 同时还负责接收用户输入.</p>
+<p>视图就像是展示者, 它并不理会在应用中发生的其它过程, 只在意传到它手中的数据, 并将这些数据转化成用户可以理解的形式并展示出来(通过HTML).</p>
+<p>controller view(控制器视图)则像是store和view之间的中介. 当state发生改变时, store会通知控制器视图, 控制器视图接收更新后的state, 将state传递给控制器视图下的所有视图.</p>
+<h2 id="如何协作"><a href="#如何协作" class="headerlink" title="如何协作"></a>如何协作</h2><p>现在我们来看看这些人物是如何协作的.</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><img src="/posts/images/flux-setup.png" alt="flux-setup"></p>
+<p>首先是初始配置: 只发生一次的应用初始化.</p>
+<p>1.应用中的全部store告知dispatcher: 一旦接收到action, 需要通知它们.</p>
+<p>2.之后控制器视图向所有store请求最新的state.</p>
+<p>3.当store将state传送给控制器视图时, 控制器视图将state传递给它底层的视图(views)以进行渲染.</p>
+<p><img src="/posts/images/flux-pass-state.png" alt="flux-pass-state"></p>
+<p>4.当state有更新时, 控制器视图也会收到store的通知.</p>
+<p><img src="/posts/images/flux-store-notify.png" alt="flux-store-notify"></p>
+<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><p>配置结束后, 应用就准备好接受用户输入了. 现在我们让用户执行一些操作来触发一个action然后观察数据流.</p>
+<p><img src="/posts/images/flux-data-flow.png" alt="flux-data-flow"></p>
+<p>1.view通知action creator开始准备创建一个action.</p>
+<p><img src="/posts/images/flux-view-action.png" alt="flux-view-action"></p>
+<p>2.action creator转化好action的格式后将其传送给dispatcher.<br><img src="/posts/images/flux-action2-dispatcher.png" alt="flux-action2-dispatcher"></p>
+<p>3.dispatcher将action逐一传送给store. 对于所有的action, 每一个已注册store都会收到通知. 然后store会判断需要对哪些action进行处理, 那些不需要处理, 并且根据action来改变state.</p>
+<p><img src="/posts/images/flux-dispacher-2store.png" alt="flux-dispacher-2store"></p>
+<p>4.state更新好之后, store会通知订阅该store的所有view controller.</p>
+<p>5.这些view controller接收到通知后, 会向store请求更新完成的state.</p>
+<p><img src="/posts/images/flux-store-controller.png" alt="flux-store-controller"></p>
+<p>6.store给出state后, view controller让它控制范围下的所有view根据更新的state重新渲染页面.</p>
+<p><img src="/posts/images/flux-controller-2view.png" alt="flux-controller-2view"></p>
+<p>以上就是我对Flux架构的理解. 希望能够帮到大家.</p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://facebook.github.io/flux/docs/overview.html" target="_blank" rel="noopener">Flux documentation</a></li>
+<li><a href="http://fluxxor.com/what-is-flux.html" target="_blank" rel="noopener">Fluxxor documentation</a></li>
+<li><a href="https://medium.com/swlh/the-case-for-flux-379b7d1982c6" target="_blank" rel="noopener">The Case for Flux</a></li>
+</ul>
+<hr>
+<p><strong>推荐阅读:</strong> 看漫画理解Redux(<a href="https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6" target="_blank" rel="noopener">英文</a>, <a href="https://icyfish.github.io/posts/2017/05/01/redux-cartoon-guide/">中文</a>)</p>
+<p><strong>注: 初学redux时看到的文章, 想要通过翻译深入理解, 因此翻译的质量可能不是太好, 内容会在之后的学习过程中不断改进.</strong></p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/05/01/redux-cartoon-guide/" class="prev">PREV</a><a href="/posts/2017/04/25/why-react/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

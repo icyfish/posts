@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> I/O · Fish</title><meta name="description" content="I/O - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">I/O</h1><div class="post-info">Oct 30, 2016</div><div class="post-content"><p>学习Node时对I/O的理解有一点困惑, 于是学习并整理了一些相关的知识.</p>
+<a id="more"></a>
+<p><strong>I/O定义</strong>: I/O即Input/Output 输入/输出,是信息处理系统(计算机)和外部世界(人类或其他信息处理系统)之间的通信.<br><strong>输入</strong>: 信息处理系统接收到的信号或信息.<br><strong>输出</strong>: 信息处理系统发出的信号或信息.</p>
+<h2 id="I-O设备和I-O操作"><a href="#I-O设备和I-O操作" class="headerlink" title="I/O设备和I/O操作"></a>I/O设备和I/O操作</h2><p>人类或其他处理系统可以通过I/O设备与计算机进行交互,比如,键盘鼠标是一台计算机的输入设备,执行输入操作,显示器和打印机是输出设备,执行输出操作.有些I/O设备可以同时执行输入和输出操作,比如调制解调器(modem,我们常说的猫就属于调制解调器中的一种类型),它执行对数字信号和模拟信号的输入输出操作.</p>
+<h2 id="编程语言中的I-O"><a href="#编程语言中的I-O" class="headerlink" title="编程语言中的I/O"></a>编程语言中的I/O</h2><p>和大多数编程语言不同,JavaScript语言本身没有I/O(输入输出)的概念.它是运行在宿主环境中的脚本语言,由宿主环境提供与外部通信的机制.最常见的宿主环境是浏览器,这些宿主环境中都含有JavaScript解释器,在Node和浏览器中的解释器是V8引擎.而在Node中有I/O的概念.</p>
+<h3 id="File-I-O"><a href="#File-I-O" class="headerlink" title="File I/O"></a>File I/O</h3><p>我们常用文本编辑器或Office软件等创建文件,但很多时候也需要利用应用程序创建文件,修改文件内容.(概念问题:所以并不是编程语言操作文件,而是利用编程语言写出的程序操作文件)</p>
+<p>文件输入指被写入文件的信息,文件输出指从文件中读取的信息.将输入输出这两个概念与屏幕的输入输出联系起来会更容易理解.</p>
+<h4 id="文件的类型"><a href="#文件的类型" class="headerlink" title="文件的类型"></a>文件的类型</h4><p>文件是物理硬盘中存储信息的地方.执行文件的I/O操作时应了解以下两种类型:</p>
+<p><strong>a. 文本文件(Text Files)</strong></p>
+<p>扩展名为.txt,可以通过文本编辑器创建,修改或删除其中的文本,极易维护,很容易阅读,但安全性低,占用内存大.</p>
+<p><strong>b. 二进制文件(Binary Files)</strong></p>
+<p>扩展名为.bin, 数据以二进制的形式存储,可以存储大量的信息,但不易阅读,安全性比文本文件高.</p>
+<h4 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h4><p>a. 创建新文件<br>b. 打开已存在计算机中的文件<br>c. 关闭文件<br>d. 从文件中读写信息</p>
+<h2 id="待解决问题"><a href="#待解决问题" class="headerlink" title="待解决问题"></a>待解决问题</h2><ol>
+<li>标准I/O与非标准I/O的区别？</li>
+<li>High-level I/O(Stream-level I/O)和Low-level I/O, Node中是否都是High-level I/O?</li>
+</ol>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Input/output" target="_blank" rel="noopener">Wikipedia I/O</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/A_re-introduction_to_JavaScript" target="_blank" rel="noopener">A re-introduction to JavaScript</a></li>
+<li><a href="https://www.tutorialspoint.com/computer_programming/computer_programming_file_io.htm" target="_blank" rel="noopener">Computer Programming - File I/O</a></li>
+<li><a href="http://www.programiz.com/c-programming/c-file-input-output" target="_blank" rel="noopener">C Programming Files I/O</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2016/11/02/js-frameworks/" class="prev">PREV</a><a href="/posts/2016/10/28/objects-functions/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

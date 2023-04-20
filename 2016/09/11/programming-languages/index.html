@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> 编程语言 · Fish</title><meta name="description" content="编程语言 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">编程语言</h1><div class="post-info">Sep 11, 2016</div><div class="post-content"><p>编译型语言与解释型语言的区别, 编译器与解释器, 源代码与机器码.</p>
+<a id="more"></a>
+<h2 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h2><p>编程语言是人类和计算机进行沟通的工具,我们用特定编程语言写出的指令集合就是源代码,但计算机的CPU无法直接识别这些源代码(source code),CPU只能识别机器码(machine code).因此需要将源代码转换成CPU可以识别的机器码.</p>
+<h2 id="源代码转换为机器码的方式"><a href="#源代码转换为机器码的方式" class="headerlink" title="源代码转换为机器码的方式"></a>源代码转换为机器码的方式</h2><pre><code>1. 编译器(compilers)
+</code></pre><p><img src="/posts/images/node_compile1.jpg" alt="compiler1"><br><img src="/posts/images/node_compile2.jpg" alt="compiler2"></p>
+<p>编译器直接将源代码文件全部编译为机器码文件,生成的文件可以在计算机中直接执行,例如我们安装新程序时经常会见到的以.exe为扩展名的文件,exe就是executable的缩写.只利用编译器转换源代码的编程语言叫做编译型语言(compiled language),编译型语言有C,C++,objective-c等.</p>
+<pre><code>2. 解释器(interpreters)
+</code></pre><p><img src="/posts/images/node_interpreter1.jpg" alt="interpreter1"><br><img src="/posts/images/node_interpreter2.jpg" alt="interpreter2"></p>
+<p>解释器获取的是源代码的拷贝,实时地将源代码一行一行地解释为机器码,JavaScript是解释型语言,我们计算机中的浏览器就是解释器.php也是解释型语言.</p>
+<pre><code>3. 即时编译器(JIT-compilers)
+</code></pre><p><img src="/posts/images/node_jit1.jpg" alt="jit1"><br><img src="/posts/images/node_jit2.jpg" alt="jit2"></p>
+<p>即时编译器混合了这二者,先将源代码一句一句编译为中间语言比特码(byte code),但是会将翻译过的代码缓存起来以降低性能损耗.运用了即时编译器的编程语言Java,C#,VB.NET,Python</p>
+<h2 id="编译型语言与解释型语言"><a href="#编译型语言与解释型语言" class="headerlink" title="编译型语言与解释型语言"></a>编译型语言与解释型语言</h2><h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p><strong>编译型语言</strong></p>
+<p>优点:</p>
+<ol>
+<li>编译可直接在自己的计算机中执行</li>
+<li>不需要发送源代码</li>
+<li>执行速度更快</li>
+</ol>
+<p>缺点:</p>
+<ol>
+<li>无法跨平台,如.exe文件PC可识别,但MAC不可,不同的CPU识别的可执行文件类型有时也会有差异</li>
+<li>测试时需要多一步编译的过程</li>
+</ol>
+<p><strong>解释型语言</strong></p>
+<p>优点:</p>
+<ol>
+<li>跨平台,如JavaScript文件依靠浏览器运行.</li>
+<li>测试更容易</li>
+<li>能够获取源代码,调试更容易</li>
+</ol>
+<p>缺点:</p>
+<ol>
+<li>机器需要有解释器才能运行文件</li>
+<li>程序每次运行多需要进行解释,速度慢</li>
+<li>源代码公开有安全风险</li>
+</ol>
+<h3 id="各自适用场景"><a href="#各自适用场景" class="headerlink" title="各自适用场景"></a>各自适用场景</h3><p>如果程序只在一个平台运行,追求效率和性能,用编译型语言,如用objective-c写ios app只在ios系统中运行;如果程序需要跨平台运行,就用解释性语言,如用JavaScript写web app.</p>
+<hr>
+<p><strong>参考</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLv-eQL7zVNdxfNVHmayusdXGRu0aJu5EQ" target="_blank" rel="noopener">Foundations of Programming Fundamentals</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2016/10/12/internet-basics/" class="prev">PREV</a><a href="/posts/2016/09/02/scope-of-variables/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> Session相关 · Fish</title><meta name="description" content="Session相关 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Session相关</h1><div class="post-info">Aug 30, 2017</div><div class="post-content"><p>Session相关知识点(笔记)</p>
+<a id="more"></a>
+<h2 id="Session是什么"><a href="#Session是什么" class="headerlink" title="Session是什么"></a>Session是什么</h2><p><strong>from:</strong> <a href="http://fred-zone.blogspot.com/2014/01/web-session.html" target="_blank" rel="noopener">Session 是什麼</a></p>
+<p>Session机制类似: 顾客在饮料店点单后获取号码牌, 号码牌上有你点饮料的相关信息, 根据号码牌向店员索取自己所点的饮料</p>
+<p>让Client取得号码牌: </p>
+<ul>
+<li>使用Cookie</li>
+<li>直接輸出並嵌入頁面之中的方法（就是要你把號碼背起來)</li>
+</ul>
+<p>拿號碼牌去 Server 要資料:</p>
+<ul>
+<li>使用Cookie</li>
+<li>運用標準的 Query string/POST body方法<br>(只要能把號碼傳到 Server 上，任何方法都行)</li>
+</ul>
+<p>就算沒有 Cookie 的存在，Session 機制也可以正常運作(传递sessionid)</p>
+<p>因为大多数浏览器实现了Cookie机制, 因此大多数网站预设采用Cookie发号码牌和兑换资料, 建立连接时把Cookie上传到Server, Server传回资料时带上Cookie</p>
+<h2 id="不使用Cookie实现session"><a href="#不使用Cookie实现session" class="headerlink" title="不使用Cookie实现session"></a>不使用Cookie实现session</h2><h3 id="通过隐藏表单传递sessionid-Hidden-Form-Fields"><a href="#通过隐藏表单传递sessionid-Hidden-Form-Fields" class="headerlink" title="通过隐藏表单传递sessionid - Hidden Form Fields"></a>通过隐藏表单传递sessionid - Hidden Form Fields</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span> = <span class="string">"hidden"</span> <span class="attr">name</span> = <span class="string">"sessionid"</span> <span class="attr">value</span> = <span class="string">"12345"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务器发送含有sessionid的隐藏表单, 表单提交后该信息通过浏览器的GET/POST请求传递到服务器. </p>
+<p><strong>缺陷:</strong> 点击<code>&lt;a&gt;</code>标签不会发送表单</p>
+<h3 id="使用URL重写传递sessionid-URL-Rewriting"><a href="#使用URL重写传递sessionid-URL-Rewriting" class="headerlink" title="使用URL重写传递sessionid - URL Rewriting"></a>使用URL重写传递sessionid - URL Rewriting</h3><p>类似以下形式: </p>
+<p><code>http://tutorialspoint.com/file.htm;sessionid=12345</code></p>
+<p><strong>缺陷:</strong> </p>
+<ul>
+<li>无法共享URL(个人信息同时也被共享)</li>
+<li>破坏缓存</li>
+<li>第三方也能看到sessionid, 可能造成会话劫持, 不安全</li>
+<li>额外服务器负荷</li>
+<li>跳转其他站点/请求特定URL丢失信息</li>
+<li>访问同一站点若不存在特定值会导致信息丢失</li>
+</ul>
+<h3 id="php中-session-use-trans-sid-1"><a href="#php中-session-use-trans-sid-1" class="headerlink" title="php中: session.use_trans_sid = 1"></a>php中: session.use_trans_sid = 1</h3><h2 id="Cookie-based-Session"><a href="#Cookie-based-Session" class="headerlink" title="Cookie-based Session"></a>Cookie-based Session</h2><p>这里的cookie, 指的是存储资料方式的不同, 不是指領號碼牌時, 是否有用到 cookie.</p>
+<p>最原始session: 资料都存在server, 对于流量大的网站服务, 存在无数台server, 而client由哪个server提供服务是随机的, 因此不适合将资料放在server</p>
+<p>cookie-based session 将资料暂存于cookie, client自己负责保存.</p>
+<p>但是cookie 4kb size limit, 因此很多网站服务选择cookie-based与服务端存储并行.</p>
+<p>这类cookie会被加密, 只有server能解, client无法存取, 因此安全性较高, 但还是有风险, 这也是采用并行存储的另一原因.</p>
+<h2 id="Session传值"><a href="#Session传值" class="headerlink" title="Session传值"></a>Session传值</h2><p>利用session机制存储资料, 让不同页面间互传资料, 通常使用Query String或POST body等方法, 把资料往server传之后, 在server端将client上传的资料存在session中(?), 之后的连线后开启其他页面, 因为使用同一个号码牌(?), 所以在不同页面依然能读到前一次存储于session的状态. (?)</p>
+<p>不理解 &gt;&gt;&gt; <a href="http://3715444.blog.51cto.com/3705444/1060559" target="_blank" rel="noopener">url传值，cookie传值，session传值的笔记</a></p>
+<h3 id="PHP实现Session传值"><a href="#PHP实现Session传值" class="headerlink" title="PHP实现Session传值"></a>PHP实现Session传值</h3><p>Session通过为每个访问者创建一个独立的ID（UID）并储存基于UID的变量来运行。UID既存储在cookie中，又在URL中展现出来。</p>
+<p><strong>将用户信息存入PHP Session之前，必须先启动Session</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> session_start(); <span class="meta">?&gt;</span></span><br><span class="line"> &lt;html&gt;</span><br><span class="line"> &lt;body&gt;&lt;/body&gt;</span><br><span class="line"> &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>存储Session变量</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> session_start();</span><br><span class="line"> <span class="comment">// store session data</span></span><br><span class="line"> $_SESSION[<span class="string">'views'</span>]=<span class="number">1</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//retrieve session data</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"Pageviews="</span>. $_SESSION[<span class="string">'views'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_SESSION[<span class="string">'views'</span>]))</span><br><span class="line">$_SESSION[<span class="string">'views'</span>]=$_SESSION[<span class="string">'views'</span>]+<span class="number">1</span>;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">$_SESSION[<span class="string">'views'</span>]=<span class="number">1</span>;<span class="keyword">echo</span> <span class="string">"Views="</span>. $_SESSION[<span class="string">'views'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>删除session</strong></p>
+<p>释放指定session变量:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">unset</span>($_SESSION[<span class="string">'views'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>将session全部删除:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">session_destroy();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://fred-zone.blogspot.com/" target="_blank" rel="noopener">Fred’s blog</a></li>
+<li><strong>HTTP the definitive guide </strong></li>
+<li><a href="https://www.tutorialspoint.com/servlets/servlets-session-tracking.htm" target="_blank" rel="noopener">Session Tracking</a></li>
+<li><a href="http://www.javapractices.com/topic/TopicAction.do?Id=226" target="_blank" rel="noopener">Beware of URL rewriting</a></li>
+<li><a href="http://web.jobbole.com/89072/" target="_blank" rel="noopener">3种 web 会话管理的方式</a></li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/09/12/webpack-tips/" class="prev">PREV</a><a href="/posts/2017/08/24/module-pattern/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> 函数式组件和类式组件的区别 · Fish</title><meta name="description" content="函数式组件和类式组件的区别 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">函数式组件和类式组件的区别</h1><div class="post-info">Jul 6, 2021</div><div class="post-content"><p>原文(2019-03-03): <a href="https://overreacted.io/how-are-function-components-different-from-classes/" target="_blank" rel="noopener">How Are Function Components Different from Classes?</a> </p>
+<p>React 函数式组件和类式组件有什么区别的呢?</p>
+<p>很长一段时间, 对于这个问题的权威回答是这样的: 类式组件提供了更多的能力(比如存储状态的能力). 不过当 <a href="https://reactjs.org/docs/hooks-intro.html" target="_blank" rel="noopener">Hooks</a> 特性出现之后, 这个答案也就过时了.</p>
+<p>或许你听说过这样的答案, 其中一类组件的性能更佳. 那么是哪一类呢? 其实许多评估性能的指标都多多少少存在一些<a href="https://medium.com/@dan_abramov/this-benchmark-is-indeed-flawed-c3d6b5b6f97f" target="_blank" rel="noopener">缺陷</a>, 因此不能太过信任性能评估的结果. 应用的性能在很大程度上跟应用的功能(是否复杂)有关, 跟你所选择的组件类型其实关系不大. 根据我们的观察, 选择不同类的组件实现相同应用时, 两者的性能差异可以忽略不计, 不过针对这两类组件的优化策略, 还是有所<a href="https://reactjs.org/docs/hooks-faq.html#are-hooks-slow-because-of-creating-functions-in-render" target="_blank" rel="noopener">差异</a>的. </p>
+<p>正常来说, 我们<a href="https://reactjs.org/docs/hooks-faq.html#should-i-use-hooks-classes-or-a-mix-of-both" target="_blank" rel="noopener">不建议</a>重写目前的类式组件, 除非你有其它的原因或者是希望拥抱新特性. Hooks 在当下还是一个比较新的特性(就像2014年的 React 一样), 同时现在的教程中还没有最佳事件可供参考, 因此可以等观望一段时间之后再投入生产使用.</p>
+<p>那么 React 函数式组件和类组件之间究竟有什么差别呢? 当然有, 在心智模型上, 它们有本质的差别. <strong>在本文中, 我将会阐释它们之间最大的差别.</strong> 这个差别在 2015 年函数式组件<a href="https://reactjs.org/blog/2015/09/10/react-v0.14-rc1.html#stateless-function-components" target="_blank" rel="noopener">出现</a>之后就存在了, 但是很多时候都被忽略了: </p>
+<blockquote>
+<p>函数式组件会捕捉当下渲染的值.</p>
+</blockquote>
+<p>这是什么意思呢?</p>
+<hr>
+<p><strong>注意: 本文并不对函数式组件的类组件的价值作高下评判. 只是阐释两者在 React 编程模型中的区别. 关于函数式组件和 Hooks 的使用问题, 可以看<a href="https://reactjs.org/docs/hooks-faq.html#adoption-strategy" target="_blank" rel="noopener">这里</a>.</strong></p>
+<hr>
+<p>查看下面的代码:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ProfilePage</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> showMessage = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    alert(<span class="string">'Followed '</span> + props.user);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setTimeout(showMessage, <span class="number">3000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;button onClick=&#123;handleClick&#125;&gt;Follow&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>以上代码做了这样的事情: 对于页面上的 button, 当我们点击它的时候, 会使用 <code>setTimeout</code> API 模拟一个网络请求, 3秒之后展示确认框. 举个例子, 如果 <code>props.user</code> 的值是 <code>&#39;Dan&#39;</code>, 那么三秒之后, 确认框就会弹出 <code>&#39;Follow Dan&#39;</code> 的文案. </p>
+<p><em>(注意: 不管在上面的示例代码中, 我用的是普通的函数还是箭头函数, <code>function handleClick</code> 做的事情都是一样的.)</em></p>
+<p>如果想要以类组件的形式实现上述代码, 应该怎么做呢? 一个比较简单的实现方式是这样的:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProfilePage</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  showMessage = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    alert(<span class="string">'Followed '</span> + <span class="keyword">this</span>.props.user);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  handleClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="keyword">this</span>.showMessage, <span class="number">3000</span>);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClick&#125;</span>&gt;</span>Follow<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>乍看我们会认为以上两部分代码做的是同样的事情, 于是就用这样的方式重写原有组件代码:</p>
+<p><img src="/posts/images/wtf.gif" alt=""></p>
+<p><strong>然而以上代码并不完全一致.</strong> 仔细看就会发现它们的差别.</p>
+<p><strong>如果你想自己寻找两者的差异, 可以查看<a href="https://codesandbox.io/s/pjqnl16lm7" target="_blank" rel="noopener">这里</a>的代码示例.</strong> 在文章的最后我们会详细说明两者的差别, 以及区分他们的差异有多么重要. </p>
+<hr>
+<p>在进入下一部分之前, 我想重点说明的是, 我们所阐释的内容和 React Hooks 没有直接的关系. 示例中并没有使用到 Hooks!</p>
+<p>我想要说明的, 仅仅是 React 函数式组件和类式组件之间的差别. 如果你想要在应用中使用更多的函数式组件, 可以进一步阅读下面的内容.</p>
+<hr>
+<p><strong>我们从 React 应用中一个常见的 bug 开始介绍两者的区别.</strong></p>
+<p>打开<a href="https://codesandbox.io/s/pjqnl16lm7" target="_blank" rel="noopener">示例代码</a>, 其中包含两种 <code>ProfilePage</code> 的实现 – 均渲染了一个”关注”按钮.</p>
+<p>现在我们开始执行下面的操作:</p>
+<ol>
+<li><strong>点击</strong>其中一个关注按钮</li>
+<li>在 3s 内<strong>修改</strong>所选择的人员</li>
+<li><strong>读取</strong>弹出的文案</li>
+</ol>
+<p>你会发现一个奇怪的差别:</p>
+<ul>
+<li>对于 <code>ProfilePage</code> <strong>函数组件</strong>, 点击关注 Dan, 之后切换成 Sophie, 仍然会弹出 <code>&#39;Followed Dan&#39;</code>.</li>
+<li>对于 <code>ProfilePage</code> <strong>类组件</strong>, 重复以上的行为之后, 会弹出 <code>&#39;Followed Sophie&#39;</code>:</li>
+</ul>
+<p><img src="/posts/images/bug.gif" alt=""></p>
+<hr>
+<p>在这个例子中, 第一种行为是正确的. <strong>如果我关注了某个人之后, 切换为另一个人, 组件不应该混淆我所关注的人.</strong> 类组件的行为是有问题的.</p>
+<p><em>(不过, 你确实应该关注 <a href="https://mobile.twitter.com/sophiebits" target="_blank" rel="noopener">Sophie</a>)</em></p>
+<hr>
+<p>为什么我们的类组件的行为是这样的呢?</p>
+<p>现在仔细观察一下我们类组件中的 <code>showMessage</code> 方法</p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2021/09/22/ref-objects-inside-useeffect-hooks/" class="prev">PREV</a><a href="/posts/2021/07/02/react-as-a-ui-runtime/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

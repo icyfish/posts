@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> [译]热重载与时间旅行调试 · Fish</title><meta name="description" content="[译]热重载与时间旅行调试 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">[译]热重载与时间旅行调试</h1><div class="post-info">May 1, 2017</div><div class="post-content"><p>原文: <a href="https://code-cartoons.com/hot-reloading-and-time-travel-debugging-what-are-they-3c8ed2812f35" target="_blank" rel="noopener">Hot reloading and time travel debugging</a><br>作者: <a href="https://code-cartoons.com/@linclark" target="_blank" rel="noopener">Lin Clark</a><br>原文发布时间: 2015.10.21</p>
+<a id="more"></a>
+<p>Redux有两个很棒的特性: 热重载和时间旅行调试. 那么这两个特性究竟是什么呢?</p>
+<h2 id="热重载"><a href="#热重载" class="headerlink" title="热重载"></a>热重载</h2><p>在我们开发的过程中, 对应用的某一部分做出微小改变是常有的事, 越早看到这些变化的效果, 开发的效率就越高.</p>
+<p>热重载的好处就是当我们对应用的一部分做出改变时, 应用的state不会被重置. 举个例子, 我们在测试一个todo应用时, 已经手动加入了一些测试的todo条目, 然后将其中几个条目勾选表示已完成. 可是测试完后你突然发现需要改变一些UI文本. 比如要将占位符中出现的笔误”New toto”修改为正确的”New todo”.</p>
+<p>如果没有热重载, 就必须:</p>
+<ul>
+<li>修改代码</li>
+<li>刷新浏览器页面</li>
+<li>重新添加数据测试功能</li>
+</ul>
+<p><img src="/posts/images/hot-reload-todo.png" alt="hot-reload-todo"></p>
+<p>但如果有热重载的特性, 我们就不需要再重新添加数据了, 因为应用的state不会被重置, 测试时添加的那些todo条目依然存在于state中, 这样调试效率就会大大提高. </p>
+<p>尽管React应用没有使用Redux来管理state, 在调试时我们依然可以实现热重载, 只是可以执行热重载的部分有所限制: 在view和action creator中可以执行热重载, 而在store中则不行. 因为store扮演着两种角色: 1.根据action改变state; 2.存储state各个版本并保持其更新. 如果重载了改变state的代码, 就会失去store当前所存储的state.</p>
+<p>Redux给予应用热重载state变化逻辑的能力, 它是这样实现的: 将任务分离, 让两个部分负责, 这两个部分分别是store和reducer, 其中store负责保存state, 而state改变的逻辑由另一个对象reducer负责. 这样我们就可以热重载state变化的逻辑(reducer)而不丢失store中所存储的state信息. </p>
+<p><img src="/posts/images/hot-reload-no-lose.png" alt="hot-reload-no-lose"></p>
+<h2 id="时间旅行调试"><a href="#时间旅行调试" class="headerlink" title="时间旅行调试"></a>时间旅行调试</h2><p>有了热重载, 即使在代码发生改变的情况下, 应用依然能够保持state不被重置. 而有了时间旅行调试, 我们可以将应用的状态调整至之前任何一个阶段. </p>
+<p><strong>(译注: 以下内容没有完全理解, 所以翻译的意思可能有偏差, 待改进.)</strong></p>
+<p>这样一来, 对应用的某部分执行测试的效率就会变高. 比如我们现在发现应用中有个bug, 当我们将某个已完成的todo条目勾选, 然后添加另一个条目时, 这个bug就会出现. 有了时间旅行调试, 应用会从头开始执行整个流程重新设置state. 然后在之后的测试中, 就可以只回退一步再添加todo条目, 不需要重新从头开始整个流程.</p>
+<p><img src="/posts/images/redux-time-travel.png" alt="redux-time-travel"></p>
+<p>这个功能还有很多其他用处, 在QA测试中, 我们能够记录下所有action. 遇到bug时可以将action和state的历史记录打包进行调试, 而且还能进行适当处理执行自动化测试. </p>
+<p>从技术上来说, 在Flux中实现时间旅行调试也是可行的, 但实现过程十分复杂, 在Redux中实现方式更简单.</p>
+<hr>
+<p><strong>推荐阅读:</strong> 看漫画理解Redux(<a href="https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6" target="_blank" rel="noopener">英文</a>, <a href="https://icyfish.github.io/posts/2017/05/01/redux-cartoon-guide/">中文</a>)</p>
+<p><strong>注: 初学redux时看到的文章, 想要通过翻译深入理解, 因此翻译的质量可能不是太好, 内容会在学习的过程中不断改进.</strong></p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/05/13/webpack2-basics/" class="prev">PREV</a><a href="/posts/2017/05/01/redux-cartoon-guide/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

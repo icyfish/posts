@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="google-site-verification" content="IDYUPnBNhdnU8o9LRNKZ1RSt14tIxTI0rLeMrBtswXw"><title> git常用指令 · Fish</title><meta name="description" content="git常用指令 - Fish"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/posts/favicon.png"><link rel="stylesheet" href="/posts/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://icyfish.github.io/posts/atom.xml" title="Fish"><meta name="generator" content="Hexo 7.0.0-rc1"></head><body><div class="wrap"><header><a href="/posts/" class="logo-link"><img src="/posts/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/posts/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/posts/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/posts/about/" target="_self" class="nav-list-link">ABOUT</a></li><li class="nav-list-item"><a href="http://twitter.com/icyfish_" target="_blank" class="nav-list-link">TWITTER</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">git常用指令</h1><div class="post-info">Mar 11, 2017</div><div class="post-content"><p>学习过程中一些比较经常用到的git指令, 持续更新.<br>(updated at 2017-07-11)</p>
+<a id="more"></a>
+<h2 id="在某个分支修改了部分内容之后发现需要这部分内容应该要在另一个分支修改"><a href="#在某个分支修改了部分内容之后发现需要这部分内容应该要在另一个分支修改" class="headerlink" title="在某个分支修改了部分内容之后发现需要这部分内容应该要在另一个分支修改"></a>在某个分支修改了部分内容之后发现需要这部分内容应该要在另一个分支修改</h2><p>1.首先暂存在该分支的全部改变</p>
+<p><code>git stash</code></p>
+<p>2.checkout到另一分支, 将暂存起来的改变添加到该分支</p>
+<p><code>git checkout another-branch</code></p>
+<p><code>git stash pop</code></p>
+<h2 id="删除所有commit历史记录-保存现在的代码"><a href="#删除所有commit历史记录-保存现在的代码" class="headerlink" title="删除所有commit历史记录,保存现在的代码"></a>删除所有commit历史记录,保存现在的代码</h2><p>1.Checkout另一个branch</p>
+<p><code>git checkout --orphan branch_name</code></p>
+<p>2.stage所有文件</p>
+<p><code>git add -A</code></p>
+<p>3.提交</p>
+<p><code>git commit -am &quot;commit message&quot;</code></p>
+<p>4.删除master分支<br>(本例假定删除master分支的commit历史, 如果要删除其他分支的历史, 把master改为所需分支名即可, 步骤5, 6同理)</p>
+<p><code>git branch -D master</code></p>
+<p>5.将新创建的分支名改为master</p>
+<p><code>git branch -m master</code></p>
+<p>6.强制更新repo</p>
+<p><code>git push -f origin master</code></p>
+<h2 id="本地-远程删除分支方法"><a href="#本地-远程删除分支方法" class="headerlink" title="本地,远程删除分支方法"></a>本地,远程删除分支方法</h2><p>本地:</p>
+<p><code>git branch -d branch_name</code></p>
+<p>远程:</p>
+<p><code>git push origin --delete branch_name</code></p>
+<p><a href="http://stackoverflow.com/questions/2003505/how-to-delete-a-git-branch-both-locally-and-remotely" target="_blank" rel="noopener">更详细</a></p>
+<h2 id="与远程库分离"><a href="#与远程库分离" class="headerlink" title="与远程库分离"></a>与远程库分离</h2><p><code>git remote rm origin</code></p>
+</div></article></div></main><footer><div class="paginator"><a href="/posts/2017/04/09/without-internet/" class="prev">PREV</a><a href="/posts/2017/03/07/array-stack-queue/" class="next">NEXT</a></div><div class="copyright"><p>© 2019 - 2023 <a href="https://icyfish.github.io/posts">Fish</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
